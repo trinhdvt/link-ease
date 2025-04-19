@@ -1,5 +1,3 @@
-# Firebase Studio
+# LinkEase - URLs Shortener
 
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+Made by Firebase Studio - Vibe Coding 🤘
