@@ -23,6 +23,11 @@ const config: Config = {
   },
   setupFilesAfterEnv: ["<rootDir>/config/jest/jest.setup.ts"],
   testEnvironment: "jsdom",
+  coverageThreshold: {
+    global: {
+      lines: 80,
+    },
+  },
 };
 
 export default createJestConfig(config);
