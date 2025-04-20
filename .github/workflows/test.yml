@@ -3,7 +3,12 @@ name: Run Jest Tests
 on:
   pull_request:
     branches:
-      - main
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+    draft: false
 
 jobs:
   test:
