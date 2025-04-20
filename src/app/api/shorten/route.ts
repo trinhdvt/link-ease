@@ -14,8 +14,7 @@ export async function POST(req: Request) {
     try {
       new URL(url);
     } catch (e: any) {
-      return NextResponse.json({ error: "URL is required" }, { status: 422 });
-    }
+      return NextResponse.json({ error: "Invalid URL" }, { status: 422 });
     const currentUser = await getAuthenticatedUser(authorization);
 
     try {
