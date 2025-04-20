@@ -13,17 +13,17 @@ export default function Home() {
 
   const handleShortenUrl = async () => {
     try {
-      const response = await fetch('/api/shorten', {
-        method: 'POST',
+      const response = await fetch("/api/shorten", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ url }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to shorten URL');
+        throw new Error(errorData.error || "Failed to shorten URL");
       }
 
       const data = await response.json();
@@ -50,7 +50,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-semibold mb-6">LinkEase - Shorten Your URLs</h1>
+      <h1 className="text-2xl font-semibold mb-6">
+        LinkEase - Shorten Your URLs
+      </h1>
       <div className="w-full max-w-md space-y-4">
         <Input
           type="url"
@@ -58,15 +60,28 @@ export default function Home() {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <Button onClick={handleShortenUrl} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button
+          onClick={handleShortenUrl}
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+        >
           Shorten
         </Button>
         {shortenedUrl && (
           <div className="flex items-center justify-between p-4 rounded-md bg-accent/50">
-            <a href={shortenedUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            <a
+              href={shortenedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               {shortenedUrl}
             </a>
-            <Button variant="outline" size="icon" onClick={handleCopyShortenedUrl}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleCopyShortenedUrl}
+              aria-label="Copy result"
+            >
               <Copy className="h-4 w-4" />
             </Button>
           </div>
