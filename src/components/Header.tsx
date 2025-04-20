@@ -20,24 +20,21 @@ const Header: React.FC = () => {
       setUser(currentUser);
       setLoading(false);
     });
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe();
   }, []);
 
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // State will update via onAuthStateChanged listener
     } catch (error) {
       console.error("Error signing in with Google: ", error);
-      // Handle sign-in errors (e.g., popup closed, network error)
     }
   };
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      // State will update via onAuthStateChanged listener
     } catch (error) {
       console.error("Error signing out: ", error);
     }

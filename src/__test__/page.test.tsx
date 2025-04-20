@@ -4,6 +4,12 @@ import "@testing-library/jest-dom";
 import Home from "@/app/page";
 import { useToast } from "@/hooks/use-toast";
 
+jest.mock("@/lib/firebase", () => ({
+  auth: {
+    currentUser: null,
+  },
+}));
+
 jest.mock("@/hooks/use-toast", () => ({
   useToast: jest.fn(),
 }));
