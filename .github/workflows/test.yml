@@ -8,7 +8,7 @@ on:
       - opened
       - synchronize
       - reopened
-    draft: false
+      - ready_for_review
 
 jobs:
   test:
