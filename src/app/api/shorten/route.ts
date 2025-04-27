@@ -20,16 +20,19 @@ export async function POST(req: Request) {
     const currentUser = await getAuthenticatedUser(authorization);
 
     try {
-      const expiresAt = Date.now() + 60 * 1000;
+      const now = Date.now();
+      const expiresAt = now + 60 * 1000;
 
       const urlData: {
         original: string;
         expiresAt: number;
-        owner_id?: string;
+        ownerId?: string;
+        createdAt?: number;
       } = {
         original: url,
         expiresAt: expiresAt,
-        ...(currentUser && { owner_id: currentUser.uid }),
+        createdAt: now,
+        ...(currentUser && { ownerId: currentUser.uid }),
       };
 
       const createdDoc = await db.collection("urls").add(urlData);
