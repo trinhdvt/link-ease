@@ -15,6 +15,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-auth.setPersistence(inMemoryPersistence);
+(async () => {
+  try {
+    await auth.setPersistence(inMemoryPersistence);
+  } catch (error) {
+    console.error("Failed to set persistence:", error);
+  }
+})();
 
 export { app, auth }; // Export necessary Firebase services
