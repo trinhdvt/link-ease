@@ -3,16 +3,21 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Copy, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { auth } from "@/lib/firebase"; // Import Firebase auth
+import { auth } from "@/lib/firebase";
 
 export default function Home() {
   const [url, setUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleShortenUrl = async () => {
+  const handleShortenUrl = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!url) return;
+
+    setIsLoading(true);
     try {
       const headers: HeadersInit = {
         "Content-Type": "application/json",
@@ -53,6 +58,8 @@ export default function Home() {
         title: "Error",
         description: error.message,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,18 +76,29 @@ export default function Home() {
         LinkEase - Shorten Your URLs
       </h1>
       <div className="w-full max-w-md space-y-4">
-        <Input
-          type="url"
-          placeholder="Paste your URL here"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <Button
-          onClick={handleShortenUrl}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          Shorten
-        </Button>
+        <form onSubmit={handleShortenUrl} className="space-y-4">
+          <Input
+            type="url"
+            placeholder="Paste your URL here"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            disabled={isLoading}
+          />
+          <Button
+            type="submit"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={isLoading || !url}
+          >
+            {isLoading ? (
+              <>
+                Shortening
+                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+              </>
+            ) : (
+              "Shorten"
+            )}
+          </Button>
+        </form>
         {shortenedUrl && (
           <div className="flex items-center justify-between p-4 rounded-md bg-accent/50">
             <a
