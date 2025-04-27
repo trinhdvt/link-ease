@@ -77,6 +77,7 @@ describe("Home Page", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: testUrl }),
+        credentials: "include",
       });
     });
 

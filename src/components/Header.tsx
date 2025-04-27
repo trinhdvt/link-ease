@@ -1,32 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import {
-  onAuthStateChanged,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut,
-  User,
-} from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 
-const Header: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+interface HeaderProps {
+  user?: {
+    displayName: string;
+    email?: string;
+    photoURL?: string;
+  };
+}
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+const Header: React.FC<HeaderProps> = ({ user }) => {
+  const router = useRouter();
 
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to log in");
+      }
+      router.refresh();
     } catch (error) {
       console.error("Error signing in with Google: ", error);
     }
@@ -34,7 +41,11 @@ const Header: React.FC = () => {
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      router.refresh();
     } catch (error) {
       console.error("Error signing out: ", error);
     }
@@ -50,9 +61,7 @@ const Header: React.FC = () => {
         alignItems: "center",
       }}
     >
-      {loading ? (
-        <span>Loading...</span>
-      ) : user ? (
+      {user ? (
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {user.photoURL && (
             <img
