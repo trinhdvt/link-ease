@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { auth } from "@/lib/firebase";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -19,25 +18,12 @@ export default function Home() {
 
     setIsLoading(true);
     try {
-      const headers: HeadersInit = {
-        "Content-Type": "application/json",
-      };
-
-      // Get ID token if user is signed in
-      if (auth.currentUser) {
-        try {
-          const idToken = await auth.currentUser.getIdToken();
-          headers["Authorization"] = `Bearer ${idToken}`;
-        } catch (error) {
-          console.error("Error getting ID token:", error);
-          // Decide how to handle token error - maybe notify user or proceed without auth?
-          // For now, we'll proceed without the auth header
-        }
-      }
-
       const response = await fetch("/api/shorten", {
         method: "POST",
-        headers: headers, // Use the updated headers object
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
         body: JSON.stringify({ url }),
       });
 

@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Header from "@/components/Header";
-import { User } from "firebase/auth";
 
 jest.mock("@/lib/firebase", () => ({
   auth: {},
@@ -11,16 +10,21 @@ jest.mock("@/lib/firebase", () => ({
 jest.mock("firebase/auth", () => {
   return {
     GoogleAuthProvider: jest.fn(() => ({})),
-    signInWithPopup: jest.fn(),
-    signOut: jest.fn(),
-    onAuthStateChanged: jest.fn(
-      (_auth: any, callback: (user: User | null) => void) => {
-        callback(null);
-        return () => {};
-      }
+    signInWithPopup: jest.fn(() =>
+      Promise.resolve({
+        user: { getIdToken: jest.fn(() => Promise.resolve("mock-token")) },
+      })
     ),
   };
 });
+
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(() => ({
+    refresh: jest.fn(),
+  })),
+}));
+
+global.fetch = jest.fn();
 
 describe("Header Component", () => {
   beforeEach(() => {
@@ -33,6 +37,9 @@ describe("Header Component", () => {
   });
 
   test("calls signInWithPopup when sign in button is clicked", async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+    });
     const { GoogleAuthProvider, signInWithPopup } = require("firebase/auth");
     render(<Header />);
 
@@ -42,6 +49,13 @@ describe("Header Component", () => {
     await waitFor(() => {
       expect(GoogleAuthProvider).toHaveBeenCalledTimes(1);
       expect(signInWithPopup).toHaveBeenCalledTimes(1);
+      expect(global.fetch).toHaveBeenCalledWith("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken: "mock-token" }),
+      });
     });
   });
 
@@ -50,29 +64,10 @@ describe("Header Component", () => {
       displayName: "Test User",
       email: "test@example.com",
       photoURL: "https://example.com/photo.jpg",
-      uid: "123",
-      emailVerified: true,
-      isAnonymous: false,
-      metadata: {},
-      providerData: [],
-      refreshToken: "",
-      tenantId: null,
-      delete: jest.fn(),
-      getIdToken: jest.fn().mockResolvedValue("mock-token"),
-      getIdTokenResult: jest.fn(),
-      reload: jest.fn(),
-      toJSON: jest.fn(),
-    } as unknown as User;
+      id: "12345",
+    };
 
-    const { onAuthStateChanged, signOut } = require("firebase/auth");
-    onAuthStateChanged.mockImplementation(
-      (_auth: any, callback: (user: User | null) => void) => {
-        callback(mockUser);
-        return () => {};
-      }
-    );
-
-    render(<Header />);
+    render(<Header user={mockUser} />);
 
     await waitFor(() => {
       expect(screen.getByText("Test User")).toBeInTheDocument();
@@ -81,7 +76,11 @@ describe("Header Component", () => {
 
     const signOutButton = screen.getByText("Sign Out");
     fireEvent.click(signOutButton);
-
-    expect(signOut).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    });
   });
 });

@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { dbAdmin as db } from "@/lib/firebaseAdmin";
-import { getAuthenticatedUser } from "@/lib/firebaseAdmin";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(req: Request) {
-  const authorization = req.headers.get("Authorization");
-
   try {
     const { url } = await req.json();
     if (!url) {
@@ -17,7 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid URL" }, { status: 422 });
     }
 
-    const currentUser = await getAuthenticatedUser(authorization);
+    const currentUser = await getCurrentUser();
 
     try {
       const now = Date.now();
@@ -32,7 +30,7 @@ export async function POST(req: Request) {
         original: url,
         expiresAt: expiresAt,
         createdAt: now,
-        ...(currentUser && { ownerId: currentUser.uid }),
+        ...(currentUser && { ownerId: currentUser.id }),
       };
 
       const createdDoc = await db.collection("urls").add(urlData);
