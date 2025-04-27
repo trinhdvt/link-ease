@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Home from "@/app/page";
 import { useToast } from "@/hooks/use-toast";
@@ -89,36 +95,22 @@ describe("Home Page", () => {
     });
   });
 
-  test("handles API error during URL shortening", async () => {
-    const errorMessage = "Invalid URL provided";
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: errorMessage }),
-    });
-
+  test("input invalid URL", async () => {
     render(<Home />);
 
     const input = screen.getByPlaceholderText(/Paste your URL here/i);
     const shortenButton = screen.getByRole("button", { name: /Shorten/i });
     const testUrl = "invalid-url";
 
-    fireEvent.change(input, { target: { value: testUrl } });
+    act(() => {
+      fireEvent.change(input, { target: { value: testUrl } });
+    });
+    expect(shortenButton).not.toBeDisabled();
     fireEvent.click(shortenButton);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(global.fetch).not.toHaveBeenCalled();
     });
-
-    expect(mockToast).toHaveBeenCalledWith({
-      variant: "destructive",
-      title: "Error",
-      description: errorMessage,
-    });
-
-    expect(screen.queryByRole("link")).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: /copy/i })
-    ).not.toBeInTheDocument();
   });
 
   test("handles copy button click", async () => {
@@ -130,13 +122,29 @@ describe("Home Page", () => {
 
     render(<Home />);
 
-    const input = screen.getByPlaceholderText(/Paste your URL here/i);
+    const input = screen.getByPlaceholderText("Paste your URL here");
     const shortenButton = screen.getByRole("button", { name: /Shorten/i });
 
     fireEvent.change(input, {
       target: { value: "https://another-example.com" },
     });
+
+    // Check the form can be submitted
     fireEvent.click(shortenButton);
+
+    // Check loading state
+    await waitFor(() => {
+      expect(screen.getByText(/Shortening/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Shortening/i })
+      ).toBeDisabled();
+    });
+
+    // Wait for API response
+    await waitFor(() => {
+      expect(screen.queryByText("Shortening")).not.toBeInTheDocument();
+      expect(screen.getByText("Shorten")).toBeInTheDocument();
+    });
 
     const copyButton = await screen.findByRole("button", { name: /copy/i });
     fireEvent.click(copyButton);
