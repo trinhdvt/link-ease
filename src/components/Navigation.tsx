@@ -34,7 +34,6 @@ export default function Navigation() {
           <li key={item.id}>
             <Link
               href={item.href}
-              type="button"
               className={cn(
                 "relative py-5 px-1 text-sm font-medium transition-colors",
                 pathname === item.href
