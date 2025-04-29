@@ -13,7 +13,7 @@ jest.mock("firebase/auth", () => {
     signInWithPopup: jest.fn(() =>
       Promise.resolve({
         user: { getIdToken: jest.fn(() => Promise.resolve("mock-token")) },
-      })
+      }),
     ),
   };
 });
@@ -22,6 +22,7 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     refresh: jest.fn(),
   })),
+  usePathname: jest.fn(() => "/"),
 }));
 
 global.fetch = jest.fn();

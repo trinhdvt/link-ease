@@ -5,6 +5,7 @@ import type React from "react";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import Navigation from "./Navigation";
 
 interface HeaderProps {
   user?: {
@@ -52,42 +53,37 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
   };
 
   return (
-    <header
-      style={{
-        padding: "1rem",
-        borderBottom: "1px solid #ccc",
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
-    >
-      {user ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          {user.photoURL && (
-            <img
-              src={user.photoURL}
-              alt={user.displayName || "User profile"}
-              style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-            />
-          )}
-          <span>{user.displayName || user.email}</span>
+    <header className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <Navigation />
+        {user ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {user.photoURL && (
+              <img
+                src={user.photoURL}
+                alt={user.displayName || "User profile"}
+                style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+              />
+            )}
+            <span>{user.displayName || user.email}</span>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              style={{ padding: "8px 12px", cursor: "pointer" }}
+            >
+              Sign Out
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
-            onClick={handleSignOut}
+            onClick={handleSignIn}
             style={{ padding: "8px 12px", cursor: "pointer" }}
           >
-            Sign Out
+            Sign in with Google
           </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={handleSignIn}
-          style={{ padding: "8px 12px", cursor: "pointer" }}
-        >
-          Sign in with Google
-        </button>
-      )}
+        )}
+      </div>
     </header>
   );
 };

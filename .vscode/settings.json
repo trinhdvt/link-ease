@@ -3,5 +3,16 @@
     "IDX.aI.enableCodebaseIndexing": true,
     "jest.jestCommandLine": "npm run test -- ",
     "jest.runMode": "on-demand",
-    "editor.defaultFormatter": "biomejs.biome",
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome",
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome",
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "biomejs.biome",
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome",
+    }
 }
