@@ -32,8 +32,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header user={user} />
-        {children}
+        <div className="min-h-screen bg-gray-50">
+          <Header user={user} />
+          <main className="h-[calc(100vh-64px)]">{children}</main>
+        </div>
         <Toaster />
       </body>
     </html>
