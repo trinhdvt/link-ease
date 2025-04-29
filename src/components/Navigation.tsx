@@ -38,7 +38,7 @@ export default function Navigation() {
                 "relative py-5 px-1 text-sm font-medium transition-colors",
                 pathname === item.href
                   ? "text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
+                  : "text-gray-600 hover:text-gray-900",
               )}
             >
               {item.label}
@@ -63,7 +63,7 @@ export default function Navigation() {
                   }}
                   className={cn(
                     "text-sm font-medium",
-                    pathname === item.href ? "text-blue-600" : "text-gray-600"
+                    pathname === item.href ? "text-blue-600" : "text-gray-600",
                   )}
                 >
                   {item.label}
