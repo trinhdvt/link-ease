@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -72,6 +72,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
           )}
           <span>{user.displayName || user.email}</span>
           <button
+            type="button"
             onClick={handleSignOut}
             style={{ padding: "8px 12px", cursor: "pointer" }}
           >
@@ -80,6 +81,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
         </div>
       ) : (
         <button
+          type="button"
           onClick={handleSignIn}
           style={{ padding: "8px 12px", cursor: "pointer" }}
         >
