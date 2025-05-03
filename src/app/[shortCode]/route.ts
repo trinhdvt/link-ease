@@ -1,6 +1,7 @@
 import { dbAdmin } from "@/lib/firebaseAdmin";
 import type { DocumentData } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 
@@ -10,13 +11,14 @@ interface Params {
   }>;
 }
 
-export async function GET(_: Request, { params }: Params) {
+export async function GET(req: Request, { params }: Params) {
   const { shortCode } = await params;
 
   let docSnap: DocumentSnapshot<DocumentData>;
+  const shortCodeRef = dbAdmin.collection("urls").doc(shortCode);
+
   try {
-    const docRef = dbAdmin.collection("urls").doc(shortCode);
-    docSnap = await docRef.get();
+    docSnap = await shortCodeRef.get();
   } catch (error) {
     console.error("Error fetching document:", error);
     return NextResponse.redirect("/500");
@@ -24,7 +26,26 @@ export async function GET(_: Request, { params }: Params) {
 
   if (docSnap.exists) {
     const data = docSnap.data();
-    if (data?.expiresAt && data.expiresAt > Date.now()) {
+    const now = Date.now();
+    if (data?.expiresAt && data.expiresAt > now) {
+      const date = new Date(now).toISOString().split("T")[0];
+      const userAgent = req.headers.get("user-agent") || "unknown";
+      const referrer = req.headers.get("referer") || "direct";
+
+      const logData = {
+        timestamp: now,
+        date: date,
+        userAgent: userAgent,
+        referrer: referrer,
+      };
+
+      shortCodeRef.collection("accessLogs").add(logData).catch(console.error);
+      shortCodeRef
+        .update({
+          [`dailyAccessCounts.${date}`]: FieldValue.increment(1),
+        })
+        .catch(console.error);
+
       return NextResponse.redirect(data?.original);
     }
   }
