@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { serverConfig } from "./config";
 import { authAdmin } from "./firebaseAdmin";
-import { DecodedIdToken } from "firebase-admin/auth";
+import type { DecodedIdToken } from "firebase-admin/auth";
+import type { User } from "@/features/user/types";
 
 /**
  * Retrieves and verifies the authentication token from the session cookie.
@@ -28,13 +29,6 @@ export const getAuthToken = async (): Promise<DecodedIdToken | undefined> => {
       console.error("Error decoding session cookie:", error);
     }
   }
-};
-
-export type User = {
-  id: string;
-  displayName: string;
-  email?: string;
-  photoURL?: string;
 };
 
 /**
