@@ -3,7 +3,7 @@ import { dbAdmin as db } from "@/lib/firebaseAdmin";
 import { NextResponse } from "next/server";
 
 const SHORTEN_URL_EXPIRATION_TIME =
-  Number.parseInt(process.env.SHORTEN_URL_EXPIRATION_TIME || "") || 60 * 1000;
+  Number.parseInt(process.env.SHORTEN_URL_EXPIRATION_TIME || "", 10) || 60 * 1000;
 
 export async function POST(req: Request) {
   try {
