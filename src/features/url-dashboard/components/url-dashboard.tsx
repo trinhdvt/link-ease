@@ -9,20 +9,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getMockUrls } from "@/lib/data";
+
+import type { UrlData } from "@/lib/data";
 import { useState } from "react";
 import UrlTable from "./url-table";
 
-// Get mock data
-const allUrls = getMockUrls();
+type UrlDashboardProps = {
+  urls: UrlData[];
+};
 
-export default function UrlDashboard() {
+export default function UrlDashboard({ urls }: UrlDashboardProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("created_desc");
   const [statusFilter, setStatusFilter] = useState("all");
 
   // Filter URLs based on search query and status
-  const filteredUrls = allUrls.filter((url) => {
+  const filteredUrls = urls.filter((url) => {
     // Search filter
     const matchesSearch =
       searchQuery === "" ||

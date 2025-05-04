@@ -1,5 +1,6 @@
 import UrlDashboard from "@/features/url-dashboard/components/url-dashboard";
 import { getCurrentUser } from "@/lib/auth";
+import { getUserUrls } from "@/lib/data";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -13,6 +14,7 @@ export default async function DashboardPage() {
   if (!user) {
     return notFound();
   }
+  const allUrls = await getUserUrls(user.id);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -23,7 +25,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <UrlDashboard />
+      <UrlDashboard urls={allUrls} />
     </div>
   );
 }
