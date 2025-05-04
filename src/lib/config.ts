@@ -7,3 +7,8 @@ export const serverConfig = {
   },
   authCookiePath: "/",
 };
+
+export const clientConfig = {
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:9002",
+  domain: process.env.NEXT_PUBLIC_DOMAIN || "localhost:9002",
+};

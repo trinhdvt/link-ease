@@ -1,9 +1,11 @@
 import { getCurrentUser } from "@/lib/auth";
+import { clientConfig } from "@/lib/config";
 import { dbAdmin as db } from "@/lib/firebaseAdmin";
 import { NextResponse } from "next/server";
 
 const SHORTEN_URL_EXPIRATION_TIME =
-  Number.parseInt(process.env.SHORTEN_URL_EXPIRATION_TIME || "", 10) || 60 * 1000;
+  Number.parseInt(process.env.SHORTEN_URL_EXPIRATION_TIME || "", 10) ||
+  60 * 1000;
 
 export async function POST(req: Request) {
   try {
@@ -38,7 +40,7 @@ export async function POST(req: Request) {
       };
 
       const createdDoc = await db.collection("urls").add(urlData);
-      const newShortenedUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${createdDoc.id}`;
+      const newShortenedUrl = `${clientConfig.baseUrl}/${createdDoc.id}`;
 
       return NextResponse.json(
         { shortenedUrl: newShortenedUrl },

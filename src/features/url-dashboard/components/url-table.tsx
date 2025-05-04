@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { clientConfig } from "@/lib/config";
 import type { UrlData } from "@/lib/data";
 
 import {
@@ -21,6 +22,7 @@ import {
   ExternalLink,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 interface UrlTableProps {
@@ -71,7 +73,9 @@ export default function UrlTable({ urls }: UrlTableProps) {
           You haven't created any shortened URLs yet, or none match your current
           filters.
         </p>
-        <Button className="mt-4">Create New URL</Button>
+        <Button className="mt-4" asChild>
+          <Link href="/">Create New URL</Link>
+        </Button>
       </div>
     );
   }
@@ -101,24 +105,24 @@ export default function UrlTable({ urls }: UrlTableProps) {
                       >
                         {truncateUrl(url.originalUrl, 40)}
                       </div>
-                      <a
+                      <Link
                         href={url.originalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-500 hover:text-gray-700"
                       >
                         <ExternalLink size={16} />
-                      </a>
+                      </Link>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono text-sm">{`linkease.com/${url.shortCode}`}</span>
+                      <span className="font-mono text-sm">{`${clientConfig.domain}/${url.shortCode}`}</span>
                       <button
                         type="button"
                         onClick={() =>
                           copyToClipboard(
-                            `https://linkease.com/${url.shortCode}`,
+                            `${clientConfig.baseUrl}/${url.shortCode}`,
                             url.id,
                           )
                         }
@@ -153,6 +157,7 @@ export default function UrlTable({ urls }: UrlTableProps) {
                         variant="ghost"
                         size="icon"
                         title="View Analytics"
+                        disabled={true}
                       >
                         <BarChart2 size={16} />
                       </Button>
