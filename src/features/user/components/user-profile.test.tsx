@@ -2,12 +2,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { User } from "../types";
 import UserProfile from "./user-profile";
 
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(() => ({
-    refresh: jest.fn(),
-  })),
-}));
-
 global.fetch = jest.fn();
 
 describe(UserProfile, () => {

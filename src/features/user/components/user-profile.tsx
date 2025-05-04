@@ -19,15 +19,13 @@ type UserProfileProps = {
 };
 
 export default function UserProfile({ user }: UserProfileProps) {
-  const router = useRouter();
-
   const handleSignOut = async () => {
     try {
       await fetch("/api/logout", {
         method: "POST",
         credentials: "include",
       });
-      router.refresh();
+      window.location.href = "/";
     } catch (error) {
       console.error("Error signing out: ", error);
     }
