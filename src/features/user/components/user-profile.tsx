@@ -5,14 +5,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown, LayoutDashboard, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { User } from "@/features/user/types";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type UserProfileProps = {
   user: User;
@@ -57,6 +58,13 @@ export default function UserProfile({ user }: UserProfileProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="max-w-56">
+              <DropdownMenuItem>
+                <Link href="/dashboard" className="flex items-center gap-2">
+                  <LayoutDashboard />
+                  <span>Dashboard</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={handleSignOut}
