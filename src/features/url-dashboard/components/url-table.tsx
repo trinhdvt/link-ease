@@ -10,6 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { clientConfig } from "@/lib/config";
 import type { UrlData } from "@/lib/data";
 
@@ -56,10 +62,6 @@ export default function UrlTable({ urls }: UrlTableProps) {
     }).format(date);
   };
 
-  const isExpired = (dateString: string) => {
-    return new Date(dateString) < new Date();
-  };
-
   // Function to truncate long URLs for display
   const truncateUrl = (url: string, maxLength = 50) => {
     return url.length > maxLength ? `${url.substring(0, maxLength)}...` : url;
@@ -95,79 +97,90 @@ export default function UrlTable({ urls }: UrlTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedUrls.map((url) => (
-                <TableRow key={url.id}>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center space-x-2">
-                      <div
-                        className="truncate max-w-[300px]"
-                        title={url.originalUrl}
-                      >
-                        {truncateUrl(url.originalUrl, 40)}
+              {paginatedUrls.map((url) => {
+                const isExpired = new Date(url.expiresAt) < new Date();
+
+                return (
+                  <TableRow key={url.id}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className="truncate max-w-[300px]"
+                          title={url.originalUrl}
+                        >
+                          {truncateUrl(url.originalUrl, 40)}
+                        </div>
+                        <Link
+                          href={url.originalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          <ExternalLink size={16} />
+                        </Link>
                       </div>
-                      <Link
-                        href={url.originalUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <ExternalLink size={16} />
-                      </Link>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-mono text-sm">{`${clientConfig.domain}/${url.shortCode}`}</span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyToClipboard(
-                            `${clientConfig.baseUrl}/${url.shortCode}`,
-                            url.id,
-                          )
-                        }
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        {copiedId === url.id ? (
-                          <Check size={16} className="text-green-500" />
-                        ) : (
-                          <Copy size={16} />
-                        )}
-                      </button>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        isExpired(url.expiresAt) ? "destructive" : "outline"
-                      }
-                    >
-                      {isExpired(url.expiresAt) ? "Expired" : "Active"}
-                    </Badge>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {formatDate(url.expiresAt)}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {url.clicks.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="View Analytics"
-                        disabled={true}
-                      >
-                        <BarChart2 size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" title="Delete URL">
-                        <Trash2 size={16} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <span className="font-mono text-sm">{`${clientConfig.domain}/${url.shortCode}`}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            copyToClipboard(
+                              `${clientConfig.baseUrl}/${url.shortCode}`,
+                              url.id,
+                            )
+                          }
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          {copiedId === url.id ? (
+                            <Check size={16} className="text-green-500" />
+                          ) : (
+                            <Copy size={16} />
+                          )}
+                        </button>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Badge
+                              variant={isExpired ? "destructive" : "outline"}
+                            >
+                              {isExpired ? "Expired" : "Active"}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent hidden={!isExpired}>
+                            This URL has expired and will be deleted soon.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {formatDate(url.expiresAt)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {url.clicks.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="View Analytics"
+                          disabled={true}
+                        >
+                          <BarChart2 size={16} />
+                        </Button>
+                        <Button variant="ghost" size="icon" title="Delete URL">
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
