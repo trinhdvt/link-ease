@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "jest --config config/jest/jest.config.ts"
+    "test": "jest --config config/jest/jest.config.ts",
+    "test:ci": "jest --config config/jest/jest.config.ts --ci"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.0.4",
