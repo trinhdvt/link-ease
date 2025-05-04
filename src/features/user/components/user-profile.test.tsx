@@ -2,12 +2,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { User } from "../types";
 import UserProfile from "./user-profile";
 
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(() => ({
-    refresh: jest.fn(),
-  })),
-}));
-
 global.fetch = jest.fn();
 
 describe(UserProfile, () => {
@@ -38,13 +32,24 @@ describe(UserProfile, () => {
   });
 
   describe("user menu actions", () => {
-    it("renders sign out button", async () => {
-      render(<UserProfile user={mockUser} />);
+    function triggerDropdown() {
       const dropdownTrigger = screen.getByTestId("user-profile-trigger");
 
       fireEvent.keyDown(dropdownTrigger, {
         key: "Enter",
       });
+    }
+
+    it("renders dashboard link", async () => {
+      render(<UserProfile user={mockUser} />);
+      triggerDropdown();
+      const dashboardLink = await screen.findByText("Dashboard");
+      expect(dashboardLink).toBeInTheDocument();
+    });
+
+    it("renders sign out button", async () => {
+      render(<UserProfile user={mockUser} />);
+      triggerDropdown();
 
       const signOutButton = await screen.findByText("Sign out");
       expect(signOutButton).toBeInTheDocument();

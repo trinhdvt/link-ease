@@ -1,8 +1,8 @@
+import type { User } from "@/features/user/types";
+import type { DecodedIdToken } from "firebase-admin/auth";
 import { cookies } from "next/headers";
 import { serverConfig } from "./config";
 import { authAdmin } from "./firebaseAdmin";
-import type { DecodedIdToken } from "firebase-admin/auth";
-import type { User } from "@/features/user/types";
 
 /**
  * Retrieves and verifies the authentication token from the session cookie.
