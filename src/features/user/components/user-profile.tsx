@@ -58,8 +58,11 @@ export default function UserProfile({ user }: UserProfileProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="max-w-56">
-              <DropdownMenuItem>
-                <Link href="/dashboard" className="flex items-center gap-2">
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   <LayoutDashboard />
                   <span>Dashboard</span>
                 </Link>
