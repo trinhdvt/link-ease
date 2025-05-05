@@ -1,15 +1,16 @@
 import type { UrlData } from "@/lib/data";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { act } from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import UrlDashboard from "./url-dashboard";
 
-// Mock UrlTable to just render a div with the urls prop
-jest.mock("./url-table", () => ({
-  __esModule: true,
-  default: ({ urls }: { urls: UrlData[] }) => (
-    <div data-testid="url-table">{urls.map((u) => u.shortCode).join(",")}</div>
-  ),
-}));
+jest.mock("./url-table", () => {
+  return function UrlTable({ urls }: { urls: UrlData[] }) {
+    return (
+      <div data-testid="url-table">
+        {urls.map((u) => u.shortCode).join(",")}
+      </div>
+    );
+  };
+});
 
 describe("UrlDashboard", () => {
   const now = Date.now();

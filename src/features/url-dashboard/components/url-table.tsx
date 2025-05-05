@@ -19,6 +19,7 @@ import {
 import { clientConfig } from "@/lib/config";
 import type { UrlData } from "@/lib/data";
 
+import { deleteUrl } from "@/features/url-dashboard/actions/delete-url";
 import {
   BarChart2,
   Check,
@@ -29,13 +30,16 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DeleteUrlDialog } from "./delete-url-dialog";
 
 interface UrlTableProps {
   urls: UrlData[];
 }
 
 export default function UrlTable({ urls }: UrlTableProps) {
+  const router = useRouter();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -65,6 +69,11 @@ export default function UrlTable({ urls }: UrlTableProps) {
   // Function to truncate long URLs for display
   const truncateUrl = (url: string, maxLength = 50) => {
     return url.length > maxLength ? `${url.substring(0, maxLength)}...` : url;
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteUrl(id);
+    router.refresh();
   };
 
   if (urls.length === 0) {
@@ -173,9 +182,11 @@ export default function UrlTable({ urls }: UrlTableProps) {
                         >
                           <BarChart2 size={16} />
                         </Button>
-                        <Button variant="ghost" size="icon" title="Delete URL">
-                          <Trash2 size={16} />
-                        </Button>
+                        <DeleteUrlDialog
+                          urlId={url.shortCode}
+                          shortUrl={`${clientConfig.domain}/${url.shortCode}`}
+                          onDelete={handleDelete}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
