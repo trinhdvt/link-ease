@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { removeExpiredUrls } from "@/features/urls/url-service";
+import { removeExpiredUrls } from "@/features/url-shorten/url-service";
 
 /**
  * Validates basic authentication credentials
