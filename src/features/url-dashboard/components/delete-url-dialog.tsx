@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -29,6 +30,7 @@ export function DeleteUrlDialog({
   onSuccess,
 }: DeleteUrlDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const { toast } = useToast();
 
   const handleDelete = async () => {
     try {
@@ -38,7 +40,11 @@ export function DeleteUrlDialog({
         onSuccess();
       }
     } catch (error) {
-      console.error("Failed to delete URL:", error);
+      toast({
+        title: "Failed to delete URL",
+        description: "The URL has not been deleted.",
+        variant: "destructive",
+      });
     } finally {
       setIsDeleting(false);
     }

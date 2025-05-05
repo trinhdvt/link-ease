@@ -1,13 +1,22 @@
+import { useToast } from "@/hooks/use-toast";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { DeleteUrlDialog } from "./delete-url-dialog";
+
+jest.mock("@/hooks/use-toast", () => ({
+  useToast: jest.fn(),
+}));
 
 describe(DeleteUrlDialog, () => {
   const urlId = "test-id";
   const shortUrl = "https://short.url/abc";
   let onDelete: jest.Mock;
   let onSuccess: jest.Mock;
+  let mockToast: jest.Mock;
 
   beforeEach(() => {
+    jest.clearAllMocks();
+    mockToast = jest.fn();
+    (useToast as jest.Mock).mockReturnValue({ toast: mockToast });
     onDelete = jest.fn(() => Promise.resolve());
     onSuccess = jest.fn();
   });
@@ -77,7 +86,12 @@ describe(DeleteUrlDialog, () => {
     fireEvent.click(screen.getByTestId("dialog-trigger-delete-url"));
     fireEvent.click(screen.getByTestId("dialog-action-delete-url"));
     await waitFor(() => expect(onDelete).toHaveBeenCalled());
-    // No crash, button re-enabled
+    expect(mockToast).toHaveBeenCalledWith({
+      title: "Failed to delete URL",
+      description: "The URL has not been deleted.",
+      variant: "destructive",
+    });
+
     expect(
       screen.getAllByRole("button", { name: /delete url/i })[0],
     ).not.toBeDisabled();
