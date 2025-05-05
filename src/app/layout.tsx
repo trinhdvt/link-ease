@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { getCurrentUser } from "@/lib/auth";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default async function RootLayout({
           <Header user={user} />
           <main className="h-[calc(100vh-64px)]">{children}</main>
         </div>
+        <NextTopLoader showSpinner={false} />
         <Toaster />
         <Analytics />
         <SpeedInsights />

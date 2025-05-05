@@ -1,5 +1,5 @@
 import { dbAdmin } from "@/lib/firebaseAdmin";
-import { Url } from "./types";
+import type { Url } from "./types";
 
 /**
  * Removes all expired URLs from the 'urls' collection
@@ -41,16 +41,16 @@ export async function removeExpiredUrls(): Promise<{
 
     console.log(
       `Found ${urlsToDelete.length} expired URLs to delete:`,
-      JSON.stringify(urlsToDelete, null, 2)
+      JSON.stringify(urlsToDelete, null, 2),
     );
 
     // Create a batch to perform multiple deletions efficiently
     const batch = dbAdmin.batch();
 
     // Add each expired document to the batch for deletion
-    expiredUrlsSnapshot.forEach((doc) => {
+    for (const doc of expiredUrlsSnapshot.docs) {
       batch.delete(doc.ref);
-    });
+    }
 
     // Commit the batch operation
     await batch.commit();
