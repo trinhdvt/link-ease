@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Header";
+import { Toaster } from "@/components/ui/toaster";
+
 import { getCurrentUser } from "@/lib/auth";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +40,8 @@ export default async function RootLayout({
           <main className="h-[calc(100vh-64px)]">{children}</main>
         </div>
         <Toaster />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

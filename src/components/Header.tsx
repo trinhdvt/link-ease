@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 
 import SignInWithGoogle from "@/features/auth/components/sign-in-with-google";
