@@ -26,6 +26,16 @@ jest.mock("@/lib/config", () => ({
   clientConfig: { baseUrl: "https://test.com", domain: "test.com" },
 }));
 
+jest.mock("@/features/url-dashboard/actions/delete-url", () => ({
+  deleteUrl: jest.fn(),
+}));
+
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn().mockReturnValue({
+    refresh: jest.fn(),
+  }),
+}));
+
 describe("UrlTable", () => {
   const urls: UrlData[] = [
     {
