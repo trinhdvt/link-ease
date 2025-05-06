@@ -1,5 +1,5 @@
-import { initializeApp, getApps, cert } from "firebase-admin/app";
-import { DecodedIdToken, getAuth } from "firebase-admin/auth";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { type DecodedIdToken, getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
 if (!getApps().length) {
@@ -31,7 +31,7 @@ export const dbAdmin = getFirestore();
  * @returns The decoded token if valid, null otherwise
  */
 export async function getAuthenticatedUser(
-  authorizationHeader: string | null
+  authorizationHeader: string | null,
 ): Promise<DecodedIdToken | null> {
   if (!authorizationHeader?.startsWith("Bearer ")) {
     return null;

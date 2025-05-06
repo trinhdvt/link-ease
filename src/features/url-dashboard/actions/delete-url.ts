@@ -22,7 +22,8 @@ export const deleteUrl = async (shortCode: string) => {
   }
 
   try {
-    await docRef.delete();
+    await dbAdmin.recursiveDelete(docRef);
+
     return { success: true };
   } catch (error) {
     return {
