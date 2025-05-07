@@ -12,7 +12,9 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     useLightningcss: true,
+    inlineCss: true,
   },
+  poweredByHeader: false,
 };
 
 export default nextConfig;
