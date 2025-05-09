@@ -20,7 +20,7 @@ export default function RevealPage() {
           </p>
         </div>
 
-        <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
+        <div className="bg-white py-8 px-6 shadow-sm rounded-lg sm:px-10">
           <UrlRevealForm />
         </div>
 
