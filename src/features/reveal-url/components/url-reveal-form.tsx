@@ -61,7 +61,7 @@ export default function UrlRevealForm() {
         <div>
           <label
             htmlFor="url"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             Shortened URL or Code
           </label>

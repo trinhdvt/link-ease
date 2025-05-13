@@ -25,7 +25,7 @@ export default function Navigation() {
         aria-label="Toggle menu"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
-        <Menu className="h-6 w-6 text-gray-600" />
+        <Menu className="h-6 w-6 text-foreground" />
       </button>
 
       {/* Desktop Navigation */}
@@ -37,8 +37,8 @@ export default function Navigation() {
               className={cn(
                 "relative py-5 px-1 text-sm font-medium transition-colors",
                 pathname === item.href
-                  ? "text-blue-600"
-                  : "text-gray-600 hover:text-gray-900",
+                  ? "text-primary"
+                  : "text-foreground hover:text-muted-foreground",
               )}
             >
               {item.label}
@@ -63,7 +63,7 @@ export default function Navigation() {
                   }}
                   className={cn(
                     "text-sm font-medium",
-                    pathname === item.href ? "text-blue-600" : "text-gray-600",
+                    pathname === item.href ? "text-primary" : "text-foreground",
                   )}
                 >
                   {item.label}

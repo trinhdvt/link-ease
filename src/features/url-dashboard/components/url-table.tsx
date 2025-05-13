@@ -78,7 +78,7 @@ export default function UrlTable({ urls }: UrlTableProps) {
 
   if (urls.length === 0) {
     return (
-      <div className="text-center py-12 border rounded-lg bg-gray-50">
+      <div className="text-center py-12 border rounded-lg bg-gray-50 dark:bg-gray-800">
         <h3 className="text-lg font-medium">No URLs found</h3>
         <p className="text-muted-foreground mt-2">
           You haven't created any shortened URLs yet, or none match your current

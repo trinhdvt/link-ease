@@ -82,12 +82,12 @@ export default function UrlShortenForm() {
         </Button>
       </form>
       {shortenedUrl && (
-        <div className="flex items-center justify-between p-4 rounded-md bg-accent/50">
+        <div className="flex items-center justify-between p-4 rounded-md bg-accent/50 dark:bg-accent/30">
           <a
             href={shortenedUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
+            className="text-blue-500 hover:underline dark:text-blue-400"
           >
             {shortenedUrl}
           </a>

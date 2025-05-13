@@ -41,12 +41,12 @@ export default function UrlResult({ originalUrl, shortCode }: UrlResultProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="bg-gray-50 p-3 rounded-md break-all mb-4">
+        <div className="bg-gray-50 p-3 rounded-md break-all mb-4 dark:bg-gray-800">
           <a
             href={originalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 hover:underline"
+            className="text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
           >
             {truncateUrl(originalUrl)}
           </a>
