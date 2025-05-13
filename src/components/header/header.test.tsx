@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom";
-import Header from "@/components/Header";
+import Header from "@/components/header/header";
 
 jest.mock("@/features/auth/components/sign-in-with-google", () => {
   return function MockSignInWithGoogle() {
@@ -39,5 +39,12 @@ describe("Header Component", () => {
 
     render(<Header user={mockUser} />);
     expect(screen.getByText("Mocked User Profile")).toBeInTheDocument();
+  });
+
+  it("renders ThemeToggle component", () => {
+    render(<Header />);
+    expect(
+      screen.getByRole("button", { name: "Toggle theme" }),
+    ).toBeInTheDocument();
   });
 });

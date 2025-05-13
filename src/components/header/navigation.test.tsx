@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+import Navigation from "@/components/header/navigation";
 import { render, screen } from "@testing-library/react";
 
 jest.mock("next/navigation", () => ({
@@ -14,6 +14,6 @@ describe("Navigation", () => {
 
   it("should render the correct navigation item as active", () => {
     render(<Navigation />);
-    expect(screen.getByText("Shorten URL")).toHaveClass("text-blue-600");
+    expect(screen.getByText("Shorten URL")).toHaveClass("text-primary");
   });
 });

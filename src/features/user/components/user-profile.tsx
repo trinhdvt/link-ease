@@ -50,11 +50,11 @@ export default function UserProfile({ user }: UserProfileProps) {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-foreground"
                 data-testid="user-profile-trigger"
               >
                 <span>{user.displayName || user.email}</span>
-                <ChevronDown className="ml-1 h-4 w-4 text-gray-500 group-hover:text-gray-700" />
+                <ChevronDown className="ml-1 h-4 w-4 text-foreground group-hover:text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="max-w-56">

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="flex flex-col items-center h-full justify-center">
-      <h1 className="text-2xl font-semibold mb-6">
+      <h1 className="text-2xl font-semibold mb-6 text-foreground dark:text-foreground">
         LinkEase - Shorten Your URLs
       </h1>
       <div className="w-full max-w-md">
