@@ -45,7 +45,7 @@ export default function UserProfile({ user }: UserProfileProps) {
           <AvatarFallback>U</AvatarFallback>
         </Avatar>
 
-        <div className="ml-2 hidden md:block">
+        <div className="ml-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
