@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -52,12 +52,12 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-md md:hidden">
+        <div className="absolute top-16 left-0 right-0 bg-muted/50 border-b shadow-md md:hidden">
           <ul className="py-2 px-4">
             {navItems.map((item) => (
               <li key={item.id} className="py-2">
-                <button
-                  type="button"
+                <Link
+                  href={item.href}
                   onClick={() => {
                     setMobileMenuOpen(false);
                   }}
@@ -67,7 +67,7 @@ export default function Navigation() {
                   )}
                 >
                   {item.label}
-                </button>
+                </Link>
               </li>
             ))}
           </ul>

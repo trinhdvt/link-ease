@@ -39,6 +39,11 @@ describe(SignInWithGoogle, () => {
     const signInButton = screen.getByText("Sign in with Google");
     fireEvent.click(signInButton);
 
+    // Button should be disabled and show loading text
+    expect(signInButton.closest("button")).toBeDisabled();
+    expect(screen.getByText("Signing in...")).toBeInTheDocument();
+    expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "true");
+
     await waitFor(() => {
       expect(GoogleAuthProvider).toHaveBeenCalledTimes(1);
       expect(signInWithPopup).toHaveBeenCalledTimes(1);
@@ -49,6 +54,21 @@ describe(SignInWithGoogle, () => {
         },
         body: JSON.stringify({ idToken: "mock-token" }),
       });
+    });
+  });
+
+  test("shows spinner and disables button while loading", async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
+    render(<SignInWithGoogle />);
+    const signInButton = screen.getByText("Sign in with Google");
+    fireEvent.click(signInButton);
+    // Spinner should be present
+    expect(screen.getByText("Signing in...")).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeDisabled();
+    // Spinner is a span with animate-spin class
+    expect(document.querySelector(".animate-spin")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Sign in with Google")).toBeInTheDocument();
     });
   });
 });

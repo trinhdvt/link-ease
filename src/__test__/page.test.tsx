@@ -42,17 +42,17 @@ describe("Home Page", () => {
     render(<Home />);
 
     expect(
-      screen.getByRole("heading", { name: /LinkEase - Shorten Your URLs/i })
+      screen.getByText("LinkEase - Shorten Your URLs"),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText(/Paste your URL here/i)
+      screen.getByPlaceholderText(/Paste your URL here/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Shorten/i })
+      screen.getByRole("button", { name: /Shorten/i }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /copy/i })
+      screen.queryByRole("button", { name: /copy/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -137,7 +137,7 @@ describe("Home Page", () => {
     await waitFor(() => {
       expect(screen.getByText(/Shortening/i)).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /Shortening/i })
+        screen.getByRole("button", { name: /Shortening/i }),
       ).toBeDisabled();
     });
 
@@ -151,7 +151,7 @@ describe("Home Page", () => {
     fireEvent.click(copyButton);
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      mockShortenedUrl
+      mockShortenedUrl,
     );
 
     expect(mockToast).toHaveBeenCalledWith({

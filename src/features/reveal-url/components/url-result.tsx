@@ -71,12 +71,12 @@ export default function UrlResult({ originalUrl, shortCode }: UrlResultProps) {
             )}
           </Button>
 
-          <Link href={originalUrl} target="_blank" rel="noopener noreferrer">
-            <Button className="flex-1">
+          <Button className="flex-1" asChild>
+            <Link href={originalUrl} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="mr-2 h-4 w-4" />
               Visit Website
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </CardContent>
     </Card>
