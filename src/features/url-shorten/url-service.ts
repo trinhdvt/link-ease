@@ -44,16 +44,9 @@ export async function removeExpiredUrls(): Promise<{
       JSON.stringify(urlsToDelete, null, 2),
     );
 
-    // Create a batch to perform multiple deletions efficiently
-    const batch = dbAdmin.batch();
-
-    // Add each expired document to the batch for deletion
     for (const doc of expiredUrlsSnapshot.docs) {
-      batch.delete(doc.ref);
+      await dbAdmin.recursiveDelete(doc.ref);
     }
-
-    // Commit the batch operation
-    await batch.commit();
 
     console.log(`Successfully deleted ${urlsToDelete.length} expired URLs`);
     return {
