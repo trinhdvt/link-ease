@@ -4,7 +4,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { getCurrentUser } from "@/lib/auth";
 import { clientConfig } from "@/lib/config";
 import { dbAdmin as db } from "@/lib/firebaseAdmin";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 import type { User } from "@/features/user/types";
 
 const SHORTEN_URL_EXPIRATION_TIME =
@@ -12,7 +12,7 @@ const SHORTEN_URL_EXPIRATION_TIME =
   60 * 1000;
 
 const shortenRequestSchema = z.object({
-  url: z.string().url("Invalid URL format"),
+  url: z.url("Invalid URL format"),
 });
 
 class RateLimitExceededError extends Error {
@@ -36,7 +36,6 @@ export async function POST(req: NextRequest) {
     const validationResult = shortenRequestSchema.safeParse(body);
 
     if (!validationResult.success) {
-      console.error("Zod validation error: ", validationResult.error.issues);
       return NextResponse.json(
         {
           error: "Invalid request body",
