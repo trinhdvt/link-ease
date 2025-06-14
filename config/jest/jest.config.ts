@@ -3,15 +3,14 @@
  * https://jestjs.io/docs/configuration
  */
 
-import type { Config } from "jest";
 import nextJest from "next/jest.js";
-import path from "path";
+import path from "node:path";
 
 const createJestConfig = nextJest({
   dir: path.resolve(__dirname, "../../"),
 });
 
-const config: Config = {
+const config = {
   rootDir: path.resolve(__dirname, "../../"),
   verbose: true,
   clearMocks: true,
@@ -27,6 +26,9 @@ const config: Config = {
     global: {
       lines: 80,
     },
+  },
+  testEnvironmentOptions: {
+    globalsCleanup: "on",
   },
 };
 
