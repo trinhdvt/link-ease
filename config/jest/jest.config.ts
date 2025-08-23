@@ -5,6 +5,9 @@
 
 import nextJest from "next/jest.js";
 import path from "node:path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const createJestConfig = nextJest({
   dir: path.resolve(__dirname, "../../"),
