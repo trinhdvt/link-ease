@@ -41,7 +41,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.0.0",
-    "firebase": "^11.3.0",
+    "firebase": "^12.0.0",
     "firebase-admin": "^13.2.0",
     "genkit": "^1.0.4",
     "jest-get-type": "^29.6.3",
