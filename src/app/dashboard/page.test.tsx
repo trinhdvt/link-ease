@@ -1,24 +1,27 @@
+import { vi, describe, it, beforeEach, expect, type Mock } from "vitest";
 import { getCurrentUser } from "@/lib/auth";
 import { type UrlData, getUserUrls } from "@/lib/data";
 import { render, screen } from "@testing-library/react";
 import { notFound } from "next/navigation";
 import DashboardPage from "./page";
 
-jest.mock("next/navigation", () => ({
-  notFound: jest.fn(),
+vi.mock("next/navigation", () => ({
+  notFound: vi.fn(),
 }));
 
-jest.mock("@/lib/auth", () => ({
-  getCurrentUser: jest.fn(),
+vi.mock("@/lib/auth", () => ({
+  getCurrentUser: vi.fn(),
 }));
 
-jest.mock("@/lib/data", () => ({
-  getUserUrls: jest.fn(),
+vi.mock("@/lib/data", () => ({
+  getUserUrls: vi.fn(),
 }));
 
-jest.mock("@/features/url-dashboard/components/url-dashboard", () => {
-  return function MockUrlDashboard({ urls }: { urls: UrlData[] }) {
-    return <div data-testid="url-dashboard">{urls.length} URLs</div>;
+vi.mock("@/features/url-dashboard/components/url-dashboard", () => {
+  return {
+    default: function MockUrlDashboard({ urls }: { urls: UrlData[] }) {
+      return <div data-testid="url-dashboard">{urls.length} URLs</div>;
+    },
   };
 });
 
@@ -30,13 +33,13 @@ describe("DashboardPage", () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    (getCurrentUser as jest.Mock).mockResolvedValue(mockUser);
+    (getCurrentUser as Mock).mockResolvedValue(mockUser);
   });
 
   it("redirects to 404 if user is not authenticated", async () => {
-    (getCurrentUser as jest.Mock).mockResolvedValue(null);
+    (getCurrentUser as Mock).mockResolvedValue(null);
 
     render(await DashboardPage());
 
@@ -63,7 +66,7 @@ describe("DashboardPage", () => {
       },
     ];
 
-    (getUserUrls as jest.Mock).mockResolvedValue(mockUrls);
+    (getUserUrls as Mock).mockResolvedValue(mockUrls);
 
     render(await DashboardPage());
 
@@ -81,7 +84,7 @@ describe("DashboardPage", () => {
   it("passes empty array to UrlDashboard when user has no URLs", async () => {
     const mockUrls: UrlData[] = [];
 
-    (getUserUrls as jest.Mock).mockResolvedValue(mockUrls);
+    (getUserUrls as Mock).mockResolvedValue(mockUrls);
 
     render(await DashboardPage());
 

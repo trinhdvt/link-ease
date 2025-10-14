@@ -1,9 +1,10 @@
+import { vi, describe, it, afterEach } from "vitest";
 import type { UrlData } from "@/lib/data";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import UrlTable from "./url-table";
 
 // Mock lucide-react icons
-jest.mock("lucide-react", () => ({
+vi.mock("lucide-react", () => ({
   BarChart2: () => <svg data-testid="icon-analytics" />,
   Check: () => <svg data-testid="icon-check" />,
   ChevronLeft: () => <svg data-testid="icon-left" />,
@@ -16,23 +17,23 @@ jest.mock("lucide-react", () => ({
 // Mock clipboard
 Object.assign(navigator, {
   clipboard: {
-    writeText: jest.fn(),
+    writeText: vi.fn(),
   },
 });
 
 const baseUrl = "https://test.com";
 
-jest.mock("@/lib/config", () => ({
+vi.mock("@/lib/config", () => ({
   clientConfig: { baseUrl: "https://test.com", domain: "test.com" },
 }));
 
-jest.mock("@/features/url-dashboard/actions/delete-url", () => ({
-  deleteUrl: jest.fn(),
+vi.mock("@/features/url-dashboard/actions/delete-url", () => ({
+  deleteUrl: vi.fn(),
 }));
 
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn().mockReturnValue({
-    refresh: jest.fn(),
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn().mockReturnValue({
+    refresh: vi.fn(),
   }),
 }));
 
@@ -58,8 +59,8 @@ describe("UrlTable", () => {
   ];
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.useRealTimers();
+    vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   it("renders empty state", () => {
@@ -85,7 +86,7 @@ describe("UrlTable", () => {
   });
 
   it("copies shortened URL to clipboard and shows check icon", async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     render(<UrlTable urls={urls} />);
     const copyButtons = screen.getAllByRole("button", { name: "" });
     // Copy button is the second button in the first row
@@ -98,7 +99,7 @@ describe("UrlTable", () => {
     expect(screen.getByTestId("icon-check")).toBeInTheDocument();
     // After timeout, icon disappears
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     expect(screen.queryByTestId("icon-check")).not.toBeInTheDocument();
   });

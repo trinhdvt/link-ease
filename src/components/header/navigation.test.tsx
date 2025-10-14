@@ -1,8 +1,9 @@
+import { vi, describe, it } from "vitest";
 import Navigation from "@/components/header/navigation";
 import { render, screen } from "@testing-library/react";
 
-jest.mock("next/navigation", () => ({
-  usePathname: jest.fn(() => "/"),
+vi.mock("next/navigation", () => ({
+  usePathname: vi.fn(() => "/"),
 }));
 
 describe("Navigation", () => {

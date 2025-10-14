@@ -1,27 +1,27 @@
+import { vi, describe, it, beforeEach, type Mock } from "vitest";
 import RedirectPage from "./page";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
+import * as getOriginalUrlModule from "@/features/url-shorten/actions/get-original-url";
 
-jest.mock("@/features/url-shorten/actions/get-original-url", () => ({
-  getOriginalUrl: jest.fn(),
+vi.mock("@/features/url-shorten/actions/get-original-url", () => ({
+  getOriginalUrl: vi.fn(),
 }));
-jest.mock("next/headers");
-jest.mock("next/navigation", () => ({
-  notFound: jest.fn(),
-  redirect: jest.fn(),
+vi.mock("next/headers");
+vi.mock("next/navigation", () => ({
+  notFound: vi.fn(),
+  redirect: vi.fn(),
 }));
 
 describe("RedirectPage", () => {
   const mockShortCode = "abc123";
-  const mockHeaders = { get: jest.fn() };
+  const mockHeaders = { get: vi.fn() };
   const paramsPromise = Promise.resolve({ shortCode: mockShortCode });
-  const {
-    getOriginalUrl,
-  } = require("@/features/url-shorten/actions/get-original-url");
+  const getOriginalUrl = getOriginalUrlModule.getOriginalUrl as Mock;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (headers as jest.Mock).mockReturnValue(Promise.resolve(mockHeaders));
+    vi.clearAllMocks();
+    (headers as Mock).mockReturnValue(Promise.resolve(mockHeaders));
   });
 
   it("redirects to the original URL if found", async () => {

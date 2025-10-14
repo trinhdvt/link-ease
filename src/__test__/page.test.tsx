@@ -6,36 +6,36 @@ import {
   waitFor,
   act,
 } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { vi, describe, test, beforeEach, expect, type Mock } from "vitest";
 import Home from "@/app/page";
 import { useToast } from "@/hooks/use-toast";
 
-jest.mock("@/lib/firebase", () => ({
+vi.mock("@/lib/firebase", () => ({
   auth: {
     currentUser: null,
   },
 }));
 
-jest.mock("@/hooks/use-toast", () => ({
-  useToast: jest.fn(),
+vi.mock("@/hooks/use-toast", () => ({
+  useToast: vi.fn(),
 }));
 
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 Object.assign(navigator, {
   clipboard: {
-    writeText: jest.fn().mockResolvedValue(undefined),
+    writeText: vi.fn().mockResolvedValue(undefined),
   },
 });
 
 describe("Home Page", () => {
-  let mockToast: jest.Mock;
+  let mockToast: Mock;
 
   beforeEach(() => {
-    mockToast = jest.fn();
-    (useToast as jest.Mock).mockReturnValue({ toast: mockToast });
-    (global.fetch as jest.Mock).mockClear();
-    (navigator.clipboard.writeText as jest.Mock).mockClear();
+    mockToast = vi.fn();
+    (useToast as Mock).mockReturnValue({ toast: mockToast });
+    (global.fetch as Mock).mockClear();
+    (navigator.clipboard.writeText as Mock).mockClear();
   });
 
   test("renders initial state correctly", () => {
@@ -58,7 +58,7 @@ describe("Home Page", () => {
 
   test("handles successful URL shortening", async () => {
     const mockShortenedUrl = "http://localhost:3000/short123";
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
+    (global.fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ shortenedUrl: mockShortenedUrl }),
     });
@@ -116,7 +116,7 @@ describe("Home Page", () => {
 
   test("handles copy button click", async () => {
     const mockShortenedUrl = "http://localhost:3000/short456";
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
+    (global.fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ shortenedUrl: mockShortenedUrl }),
     });

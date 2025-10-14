@@ -1,14 +1,17 @@
+import { vi, describe, it, afterEach } from "vitest";
 import type { UrlData } from "@/lib/data";
 import { fireEvent, render, screen } from "@testing-library/react";
 import UrlDashboard from "./url-dashboard";
 
-jest.mock("./url-table", () => {
-  return function UrlTable({ urls }: { urls: UrlData[] }) {
-    return (
-      <div data-testid="url-table">
-        {urls.map((u) => u.shortCode).join(",")}
-      </div>
-    );
+vi.mock("./url-table", () => {
+  return {
+    default: function UrlTable({ urls }: { urls: UrlData[] }) {
+      return (
+        <div data-testid="url-table">
+          {urls.map((u) => u.shortCode).join(",")}
+        </div>
+      );
+    },
   };
 });
 
@@ -42,7 +45,7 @@ describe("UrlDashboard", () => {
   ];
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("renders search, tabs, sort, and UrlTable", () => {

@@ -1,6 +1,6 @@
 import UrlResult from "@/features/reveal-url/components/url-result";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { jest } from "@jest/globals";
+import { vi, describe, it, beforeEach, afterEach, expect } from "vitest";
 
 describe("UrlResult", () => {
   const mockProps = {
@@ -13,26 +13,26 @@ describe("UrlResult", () => {
     // Mock clipboard API
     Object.assign(navigator, {
       clipboard: {
-        writeText: jest.fn(),
+        writeText: vi.fn(),
       },
     });
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.clearAllTimers();
-    jest.useRealTimers();
+    vi.clearAllMocks();
+    vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   it("renders with provided props", () => {
     render(<UrlResult {...mockProps} />);
 
-    expect(screen.getByText(/Original URL Found/i)).toBeInTheDocument();
-    expect(screen.getByText(mockProps.shortCode)).toBeInTheDocument();
+    expect(screen.getByText(/Original URL Found/i)).toBeDefined();
+    expect(screen.getByText(mockProps.shortCode)).toBeDefined();
     expect(
       screen.getByRole("link", { name: /www\.example\.com.*\.\.\.$/i }),
-    ).toBeInTheDocument();
+    ).toBeDefined();
   });
 
   it("truncates long URLs correctly", () => {
@@ -66,14 +66,14 @@ describe("UrlResult", () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       mockProps.originalUrl,
     );
-    expect(screen.getByText(/copied/i)).toBeInTheDocument();
+    expect(screen.getByText(/copied/i)).toBeDefined();
 
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
 
-    expect(screen.queryByText(/copied/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/copy url/i)).toBeInTheDocument();
+    expect(screen.queryByText(/copied/i)).toBeNull();
+    expect(screen.getByText(/copy url/i)).toBeDefined();
   });
 
   it("renders external links with correct attributes", () => {
@@ -81,8 +81,8 @@ describe("UrlResult", () => {
 
     const links = screen.getAllByRole("link");
     for (const link of links) {
-      expect(link).toHaveAttribute("target", "_blank");
-      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link).toHaveProperty("target", "_blank")
+      expect(link).toHaveProperty("rel", "noopener noreferrer")
     }
   });
 });

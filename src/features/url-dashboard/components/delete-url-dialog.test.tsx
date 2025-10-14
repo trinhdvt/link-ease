@@ -1,24 +1,25 @@
 import { useToast } from "@/hooks/use-toast";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { vi, describe, it, beforeEach, expect, type Mock } from "vitest";
 import { DeleteUrlDialog } from "./delete-url-dialog";
 
-jest.mock("@/hooks/use-toast", () => ({
-  useToast: jest.fn(),
+vi.mock("@/hooks/use-toast", () => ({
+  useToast: vi.fn(),
 }));
 
 describe(DeleteUrlDialog, () => {
   const urlId = "test-id";
   const shortUrl = "https://short.url/abc";
-  let onDelete: jest.Mock;
-  let onSuccess: jest.Mock;
-  let mockToast: jest.Mock;
+  let onDelete: Mock;
+  let onSuccess: Mock;
+  let mockToast: Mock;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockToast = jest.fn();
-    (useToast as jest.Mock).mockReturnValue({ toast: mockToast });
-    onDelete = jest.fn(() => Promise.resolve());
-    onSuccess = jest.fn();
+    vi.clearAllMocks();
+    mockToast = vi.fn();
+    (useToast as Mock).mockReturnValue({ toast: mockToast });
+    onDelete = vi.fn(() => Promise.resolve());
+    onSuccess = vi.fn();
   });
 
   it("renders delete button", () => {
@@ -56,7 +57,7 @@ describe(DeleteUrlDialog, () => {
 
   it("disables buttons while deleting", async () => {
     let resolveDelete: (() => void) | undefined;
-    onDelete = jest.fn(
+    onDelete = vi.fn(
       () =>
         new Promise<void>((resolve) => {
           resolveDelete = () => resolve();
@@ -79,7 +80,7 @@ describe(DeleteUrlDialog, () => {
   });
 
   it("handles delete error gracefully", async () => {
-    onDelete = jest.fn(() => Promise.reject(new Error("fail")));
+    onDelete = vi.fn(() => Promise.reject(new Error("fail")));
     render(
       <DeleteUrlDialog urlId={urlId} shortUrl={shortUrl} onDelete={onDelete} />,
     );

@@ -1,39 +1,46 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { vi, describe, test, beforeAll, expect, type Mock } from "vitest";
 import SignInWithGoogle from "./sign-in-with-google";
 
-jest.mock("@/lib/firebase", () => ({
+vi.mock("@/lib/firebase", () => ({
   auth: {},
 }));
 
-jest.mock("firebase/auth", () => {
+const { mockGoogleAuthProvider, mockSignInWithPopup } = vi.hoisted(() => {
   return {
-    GoogleAuthProvider: jest.fn(() => ({})),
-    signInWithPopup: jest.fn(() =>
+    mockGoogleAuthProvider: vi.fn(() => ({})),
+    mockSignInWithPopup: vi.fn(() =>
       Promise.resolve({
-        user: { getIdToken: jest.fn(() => Promise.resolve("mock-token")) },
+        user: { getIdToken: vi.fn(() => Promise.resolve("mock-token")) },
       }),
     ),
   };
 });
 
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(() => ({
-    refresh: jest.fn(),
+vi.mock("firebase/auth", () => {
+  return {
+    GoogleAuthProvider: mockGoogleAuthProvider,
+    signInWithPopup: mockSignInWithPopup,
+  };
+});
+
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn(() => ({
+    refresh: vi.fn(),
   })),
 }));
 
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 describe(SignInWithGoogle, () => {
   beforeAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("calls signInWithPopup when sign in button is clicked", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: true,
     });
-    const { GoogleAuthProvider, signInWithPopup } = require("firebase/auth");
     render(<SignInWithGoogle />);
 
     const signInButton = screen.getByText("Sign in with Google");
@@ -45,8 +52,8 @@ describe(SignInWithGoogle, () => {
     expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "true");
 
     await waitFor(() => {
-      expect(GoogleAuthProvider).toHaveBeenCalledTimes(1);
-      expect(signInWithPopup).toHaveBeenCalledTimes(1);
+      expect(mockGoogleAuthProvider).toHaveBeenCalledTimes(1);
+      expect(mockSignInWithPopup).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledWith("/api/login", {
         method: "POST",
         headers: {
@@ -58,7 +65,7 @@ describe(SignInWithGoogle, () => {
   });
 
   test("shows spinner and disables button while loading", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
+    (global.fetch as Mock).mockResolvedValue({ ok: true });
     render(<SignInWithGoogle />);
     const signInButton = screen.getByText("Sign in with Google");
     fireEvent.click(signInButton);

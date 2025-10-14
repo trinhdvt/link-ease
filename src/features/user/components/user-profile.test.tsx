@@ -1,8 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { vi, describe, it, beforeAll, expect } from "vitest";
 import type { User } from "../types";
 import UserProfile from "./user-profile";
 
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 describe(UserProfile, () => {
   const mockUser: User = {
@@ -13,7 +14,7 @@ describe(UserProfile, () => {
   };
 
   beforeAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("user menu trigger", () => {

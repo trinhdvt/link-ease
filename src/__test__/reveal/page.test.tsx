@@ -1,9 +1,12 @@
+import { vi, describe, it } from "vitest";
 import RevealPage from "@/app/reveal/page";
 import { render, screen } from "@testing-library/react";
 
-jest.mock("@/features/reveal-url/components/url-reveal-form", () => {
-  return function UrlRevealForm() {
-    return <div>UrlRevealForm</div>;
+vi.mock("@/features/reveal-url/components/url-reveal-form", () => {
+  return {
+    default: function UrlRevealForm() {
+      return <div>UrlRevealForm</div>;
+    },
   };
 });
 

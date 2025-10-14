@@ -7,20 +7,23 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import { vi, describe, it, type Mock } from "vitest";
 
-jest.mock("@/features/reveal-url/components/url-result", () => {
-  return function UrlResult() {
-    return <div>UrlResult</div>;
-  };
-});
-
-jest.mock("@/features/reveal-url/actions", () => {
+vi.mock("@/features/reveal-url/components/url-result", () => {
   return {
-    revealUrl: jest.fn(),
+    default: function UrlResult() {
+      return <div>UrlResult</div>;
+    },
   };
 });
 
-const mockRevealUrl = (revealUrl as jest.Mock).mockResolvedValue({
+vi.mock("@/features/reveal-url/actions", () => {
+  return {
+    revealUrl: vi.fn(),
+  };
+});
+
+const mockRevealUrl = (revealUrl as Mock).mockResolvedValue({
   originalUrl: "https://linkease.com",
   shortCode: "abc123",
 });
