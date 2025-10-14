@@ -1,4 +1,4 @@
-import { vi, describe, it, afterEach } from "vitest";
+import { vi, describe, it, afterEach, expect } from "vitest";
 import type { UrlData } from "@/lib/data";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import UrlTable from "./url-table";
@@ -65,16 +65,16 @@ describe("UrlTable", () => {
 
   it("renders empty state", () => {
     render(<UrlTable urls={[]} />);
-    expect(screen.getByText(/No URLs found/i)).toBeInTheDocument();
+    expect(screen.getByText(/No URLs found/i)).toBeDefined();
     expect(
       screen.getByRole("link", { name: /Create New URL/i }),
-    ).toBeInTheDocument();
+    ).toBeDefined();
   });
 
   it("renders table rows for each url", () => {
     render(<UrlTable urls={urls} />);
-    expect(screen.getByText(/verylongurl.com/)).toBeInTheDocument();
-    expect(screen.getByText(/expired.com/)).toBeInTheDocument();
+    expect(screen.getByText(/verylongurl.com/)).toBeDefined();
+    expect(screen.getByText(/expired.com/)).toBeDefined();
     expect(screen.getAllByTestId("icon-external")).toHaveLength(2);
     expect(screen.getAllByTestId("icon-copy")).toHaveLength(2);
     expect(screen.getAllByTestId("icon-trash")).toHaveLength(2);
@@ -82,7 +82,7 @@ describe("UrlTable", () => {
 
   it("truncates long URLs", () => {
     render(<UrlTable urls={urls} />);
-    expect(screen.getByText(/verylongurl.com.*\.\.\./i)).toBeInTheDocument();
+    expect(screen.getByText(/verylongurl.com.*\.\.\./i)).toBeDefined();
   });
 
   it("copies shortened URL to clipboard and shows check icon", async () => {
@@ -96,12 +96,12 @@ describe("UrlTable", () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       `${baseUrl}/exp456`,
     );
-    expect(screen.getByTestId("icon-check")).toBeInTheDocument();
+    expect(screen.getByTestId("icon-check")).toBeDefined();
     // After timeout, icon disappears
     act(() => {
       vi.runAllTimers();
     });
-    expect(screen.queryByTestId("icon-check")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("icon-check")).toBeNull();
   });
 
   it("shows pagination controls if more than 10 urls", () => {
@@ -113,12 +113,12 @@ describe("UrlTable", () => {
       createdAt: new Date(Date.now() - 4000000 - i * 1000).toISOString(),
     }));
     render(<UrlTable urls={manyUrls} />);
-    expect(screen.getByText(/Page 1 of 2/)).toBeInTheDocument();
-    expect(screen.getByTestId("icon-right")).toBeInTheDocument();
+    expect(screen.getByText(/Page 1 of 2/)).toBeDefined();
+    expect(screen.getByTestId("icon-right")).toBeDefined();
     // Click next page
     fireEvent.click(screen.getByTestId("icon-right"));
-    expect(screen.getByText(/Page 2 of 2/)).toBeInTheDocument();
-    expect(screen.getByTestId("icon-left")).toBeInTheDocument();
+    expect(screen.getByText(/Page 2 of 2/)).toBeDefined();
+    expect(screen.getByTestId("icon-left")).toBeDefined();
   });
 
   it("renders analytics and delete buttons", () => {

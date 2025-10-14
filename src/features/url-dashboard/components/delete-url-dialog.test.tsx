@@ -26,7 +26,7 @@ describe(DeleteUrlDialog, () => {
     render(
       <DeleteUrlDialog urlId={urlId} shortUrl={shortUrl} onDelete={onDelete} />,
     );
-    expect(screen.getByTestId("dialog-trigger-delete-url")).toBeInTheDocument();
+    expect(screen.getByTestId("dialog-trigger-delete-url")).toBeDefined();
   });
 
   it("opens dialog on trigger click", () => {
@@ -36,8 +36,8 @@ describe(DeleteUrlDialog, () => {
     fireEvent.click(screen.getByTestId("dialog-trigger-delete-url"));
     expect(
       screen.getByText(/are you sure you want to delete/i),
-    ).toBeInTheDocument();
-    expect(screen.getByText(shortUrl)).toBeInTheDocument();
+    ).toBeDefined();
+    expect(screen.getByText(shortUrl)).toBeDefined();
   });
 
   it("calls onDelete and onSuccess when confirmed", async () => {
@@ -70,12 +70,12 @@ describe(DeleteUrlDialog, () => {
     fireEvent.click(screen.getByTestId("dialog-action-delete-url"));
     expect(
       screen.getAllByRole("button", { name: /delete url/i })[0],
-    ).toBeDisabled();
+    ).toHaveProperty("disabled", true);
     if (resolveDelete) resolveDelete();
     await waitFor(() =>
       expect(
         screen.getAllByRole("button", { name: /delete url/i })[0],
-      ).not.toBeDisabled(),
+      ).not.toHaveProperty("disabled", true),
     );
   });
 
@@ -95,6 +95,6 @@ describe(DeleteUrlDialog, () => {
 
     expect(
       screen.getAllByRole("button", { name: /delete url/i })[0],
-    ).not.toBeDisabled();
+    ).not.toHaveProperty("disabled", true);
   });
 });

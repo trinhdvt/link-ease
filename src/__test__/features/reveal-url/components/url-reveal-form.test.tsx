@@ -7,7 +7,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { vi, describe, it, type Mock } from "vitest";
+import { vi, describe, it, type Mock, expect } from "vitest";
 
 vi.mock("@/features/reveal-url/components/url-result", () => {
   return {
@@ -31,18 +31,18 @@ const mockRevealUrl = (revealUrl as Mock).mockResolvedValue({
 describe(UrlRevealForm, () => {
   it("should render the url reveal form with default state", () => {
     render(<UrlRevealForm />);
-    expect(screen.getByText("Shortened URL or Code")).toBeInTheDocument();
+    expect(screen.getByText("Shortened URL or Code")).toBeDefined();
     expect(
       screen.getByPlaceholderText(
         "e.g., https://linkease.com/abc123 or abc123",
       ),
-    ).toBeInTheDocument();
+    ).toBeDefined();
     expect(
       screen.getByRole("button", { name: "Reveal Original URL" }),
-    ).toBeInTheDocument();
+    ).toBeDefined();
     expect(
       screen.getByRole("button", { name: "Reveal Original URL" }),
-    ).toBeDisabled();
+    ).toHaveProperty("disabled", true);
   });
 
   it("should show an error message when the input URL is not found", async () => {
@@ -66,8 +66,8 @@ describe(UrlRevealForm, () => {
       expect(mockRevealUrl).toHaveBeenCalledWith("code-not-found");
       expect(
         screen.getByText("This shortened URL was not found in our system."),
-      ).toBeInTheDocument();
-      expect(screen.queryByText("UrlResult")).not.toBeInTheDocument();
+      ).toBeDefined();
+      expect(screen.queryByText("UrlResult")).toBeNull();
     });
   });
 
@@ -91,7 +91,7 @@ describe(UrlRevealForm, () => {
 
     await waitFor(() => {
       expect(mockRevealUrl).toHaveBeenCalledWith("abc123");
-      expect(screen.getByText("UrlResult")).toBeInTheDocument();
+      expect(screen.getByText("UrlResult")).toBeDefined();
     });
   });
 });

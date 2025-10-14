@@ -43,17 +43,17 @@ describe("Home Page", () => {
 
     expect(
       screen.getByText("LinkEase - Shorten Your URLs"),
-    ).toBeInTheDocument();
+    ).toBeDefined();
     expect(
       screen.getByPlaceholderText(/Paste your URL here/i),
-    ).toBeInTheDocument();
+    ).toBeDefined();
     expect(
       screen.getByRole("button", { name: /Shorten/i }),
-    ).toBeInTheDocument();
-    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    ).toBeDefined();
+    expect(screen.queryByRole("link")).toBeNull();
     expect(
       screen.queryByRole("button", { name: /copy/i }),
-    ).not.toBeInTheDocument();
+    ).toBeNull();
   });
 
   test("handles successful URL shortening", async () => {
@@ -85,9 +85,9 @@ describe("Home Page", () => {
       const shortenedLink = screen.getByRole("link", {
         name: mockShortenedUrl,
       });
-      expect(shortenedLink).toBeInTheDocument();
-      expect(shortenedLink).toHaveAttribute("href", mockShortenedUrl);
-      expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+      expect(shortenedLink).toBeDefined();
+      expect(shortenedLink).toHaveProperty("href", mockShortenedUrl);
+      expect(screen.getByRole("button", { name: /copy/i })).toBeDefined();
     });
 
     expect(mockToast).toHaveBeenCalledWith({
@@ -106,7 +106,7 @@ describe("Home Page", () => {
     act(() => {
       fireEvent.change(input, { target: { value: testUrl } });
     });
-    expect(shortenButton).not.toBeDisabled();
+    expect(shortenButton).toHaveProperty("disabled", false);
     fireEvent.click(shortenButton);
 
     await waitFor(() => {
@@ -135,16 +135,16 @@ describe("Home Page", () => {
 
     // Check loading state
     await waitFor(() => {
-      expect(screen.getByText(/Shortening/i)).toBeInTheDocument();
+      expect(screen.getByText(/Shortening/i)).toBeDefined();
       expect(
         screen.getByRole("button", { name: /Shortening/i }),
-      ).toBeDisabled();
+      ).toHaveProperty("disabled", true);
     });
 
     // Wait for API response
     await waitFor(() => {
-      expect(screen.queryByText("Shortening")).not.toBeInTheDocument();
-      expect(screen.getByText("Shorten")).toBeInTheDocument();
+      expect(screen.queryByText("Shortening")).toBeNull();
+      expect(screen.getByText("Shorten")).toBeDefined();
     });
 
     const copyButton = await screen.findByRole("button", { name: /copy/i });

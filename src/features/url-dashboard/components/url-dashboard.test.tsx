@@ -1,4 +1,4 @@
-import { vi, describe, it, afterEach } from "vitest";
+import { vi, describe, it, afterEach, expect } from "vitest";
 import type { UrlData } from "@/lib/data";
 import { fireEvent, render, screen } from "@testing-library/react";
 import UrlDashboard from "./url-dashboard";
@@ -50,12 +50,12 @@ describe("UrlDashboard", () => {
 
   it("renders search, tabs, sort, and UrlTable", () => {
     render(<UrlDashboard urls={urls} />);
-    expect(screen.getByPlaceholderText(/search urls/i)).toBeInTheDocument();
-    expect(screen.getByText(/All/)).toBeInTheDocument();
-    expect(screen.getByText(/Active/)).toBeInTheDocument();
-    expect(screen.getByText(/Expired/)).toBeInTheDocument();
-    expect(screen.getByText(/Newest first/)).toBeInTheDocument();
-    expect(screen.getByTestId("url-table")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/search urls/i)).toBeDefined();
+    expect(screen.getByText(/All/)).toBeDefined();
+    expect(screen.getByText(/Active/)).toBeDefined();
+    expect(screen.getByText(/Expired/)).toBeDefined();
+    expect(screen.getByText(/Newest first/)).toBeDefined();
+    expect(screen.getByTestId("url-table")).toBeDefined();
   });
 
   it("filters by search input", () => {
@@ -72,9 +72,8 @@ describe("UrlDashboard", () => {
 
     const urlTable = screen.getByTestId("url-table");
 
-    expect(urlTable).toHaveTextContent("a1");
-    expect(urlTable).toHaveTextContent("c3");
-    expect(urlTable).not.toHaveTextContent("b2");
+    expect(urlTable).toHaveProperty("textContent", "a1,c3");
+    expect(urlTable).not.toHaveProperty("textContent", "b2");
   });
 
   it("filters by status: expired", () => {

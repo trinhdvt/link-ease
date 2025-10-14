@@ -73,11 +73,11 @@ describe("DashboardPage", () => {
     expect(getCurrentUser).toHaveBeenCalled();
     expect(getUserUrls).toHaveBeenCalledWith(mockUser.id);
 
-    expect(screen.getByText("My URLs")).toBeInTheDocument();
+    expect(screen.getByText("My URLs")).toBeDefined();
     expect(
       screen.getByText("Manage and track all your shortened URLs in one place"),
-    ).toBeInTheDocument();
-    expect(screen.getByTestId("url-dashboard")).toBeInTheDocument();
+    ).toBeDefined();
+    expect(screen.getByTestId("url-dashboard")).toBeDefined();
     expect(screen.getByTestId("url-dashboard").textContent).toBe("2 URLs");
   });
 
@@ -89,12 +89,12 @@ describe("DashboardPage", () => {
     render(await DashboardPage());
 
     expect(getUserUrls).toHaveBeenCalledWith(mockUser.id);
-    expect(screen.getByTestId("url-dashboard")).toBeInTheDocument();
+    expect(screen.getByTestId("url-dashboard")).toBeDefined();
     expect(screen.getByTestId("url-dashboard").textContent).toBe("0 URLs");
   });
 
   it("handles error during data fetching", async () => {
-    (getUserUrls as jest.Mock).mockRejectedValue(new Error("Failed to fetch"));
+    (getUserUrls as Mock).mockRejectedValue(new Error("Failed to fetch"));
 
     await expect(async () => {
       render(await DashboardPage());

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import { vi, describe, test, it, beforeEach } from "vitest";
+import { vi, describe, test, it, beforeEach, expect } from "vitest";
 import Header from "@/components/header/header";
 
 vi.mock("@/features/auth/components/sign-in-with-google", () => {
@@ -30,7 +30,7 @@ describe("Header Component", () => {
 
   test("renders sign in button when user is not authenticated", () => {
     render(<Header />);
-    expect(screen.getByText("Sign in with Google")).toBeInTheDocument();
+    expect(screen.getByText("Sign in with Google")).toBeDefined();
   });
 
   test("renders user profile component when authenticated", async () => {
@@ -42,13 +42,13 @@ describe("Header Component", () => {
     };
 
     render(<Header user={mockUser} />);
-    expect(screen.getByText("Mocked User Profile")).toBeInTheDocument();
+    expect(screen.getByText("Mocked User Profile")).toBeDefined();
   });
 
   it("renders ThemeToggle component", () => {
     render(<Header />);
     expect(
       screen.getByRole("button", { name: "Toggle theme" }),
-    ).toBeInTheDocument();
+    ).toBeDefined();
   });
 });

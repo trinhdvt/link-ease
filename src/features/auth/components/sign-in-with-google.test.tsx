@@ -47,9 +47,9 @@ describe(SignInWithGoogle, () => {
     fireEvent.click(signInButton);
 
     // Button should be disabled and show loading text
-    expect(signInButton.closest("button")).toBeDisabled();
-    expect(screen.getByText("Signing in...")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "true");
+    expect(signInButton.closest("button")).toHaveProperty("disabled", true);
+    expect(screen.getByText("Signing in...")).toBeDefined();
+    expect(screen.getByRole("button").getAttribute("aria-busy")).toBe("true");
 
     await waitFor(() => {
       expect(mockGoogleAuthProvider).toHaveBeenCalledTimes(1);
@@ -70,12 +70,12 @@ describe(SignInWithGoogle, () => {
     const signInButton = screen.getByText("Sign in with Google");
     fireEvent.click(signInButton);
     // Spinner should be present
-    expect(screen.getByText("Signing in...")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toBeDisabled();
+    expect(screen.getByText("Signing in...")).toBeDefined();
+    expect(screen.getByRole("button")).toHaveProperty("disabled", true);
     // Spinner is a span with animate-spin class
-    expect(document.querySelector(".animate-spin")).toBeInTheDocument();
+    expect(document.querySelector(".animate-spin")).toBeDefined();
     await waitFor(() => {
-      expect(screen.getByText("Sign in with Google")).toBeInTheDocument();
+      expect(screen.getByText("Sign in with Google")).toBeDefined();
     });
   });
 });

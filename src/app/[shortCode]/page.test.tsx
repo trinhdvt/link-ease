@@ -1,4 +1,4 @@
-import { vi, describe, it, beforeEach, type Mock } from "vitest";
+import { vi, describe, it, beforeEach, type Mock, expect } from "vitest";
 import RedirectPage from "./page";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";

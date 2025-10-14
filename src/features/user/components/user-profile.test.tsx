@@ -21,14 +21,14 @@ describe(UserProfile, () => {
     it("renders display name when available", () => {
       render(<UserProfile user={mockUser} />);
       const displayName = screen.getByText(mockUser.displayName);
-      expect(displayName).toBeInTheDocument();
+      expect(displayName).toBeDefined();
     });
 
     it("renders email when display name is not available", () => {
       const userWithoutDisplayName = { ...mockUser, displayName: "" };
       render(<UserProfile user={userWithoutDisplayName} />);
       const email = screen.getByText(mockUser.email || "");
-      expect(email).toBeInTheDocument();
+      expect(email).toBeDefined();
     });
   });
 
@@ -45,7 +45,7 @@ describe(UserProfile, () => {
       render(<UserProfile user={mockUser} />);
       triggerDropdown();
       const dashboardLink = await screen.findByText("Dashboard");
-      expect(dashboardLink).toBeInTheDocument();
+      expect(dashboardLink).toBeDefined();
     });
 
     it("renders sign out button", async () => {
@@ -53,7 +53,7 @@ describe(UserProfile, () => {
       triggerDropdown();
 
       const signOutButton = await screen.findByText("Sign out");
-      expect(signOutButton).toBeInTheDocument();
+      expect(signOutButton).toBeDefined();
 
       fireEvent.click(signOutButton);
       await waitFor(() => {
