@@ -9,6 +9,8 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     coverage: {
+      include: ["src/**/*.tsx"],
+      exclude: ["src/**/ui/**/*.tsx", "src/__test__/**/*.tsx"],
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
       thresholds: {
