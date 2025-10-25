@@ -8,7 +8,12 @@ vi.mock("@/lib/firebase", () => ({
 
 const { mockGoogleAuthProvider, mockSignInWithPopup } = vi.hoisted(() => {
   return {
-    mockGoogleAuthProvider: vi.fn(() => ({})),
+    mockGoogleAuthProvider: vi.fn().mockImplementation(function MockGoogleAuthProvider() {
+      return {
+        providerId: "google.com",
+        signInWithPopup: vi.fn(),
+      };
+    }),
     mockSignInWithPopup: vi.fn(() =>
       Promise.resolve({
         user: { getIdToken: vi.fn(() => Promise.resolve("mock-token")) },
