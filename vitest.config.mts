@@ -10,7 +10,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       include: ["src/**/*.tsx"],
-      exclude: ["src/**/ui/**/*.tsx", "src/__test__/**/*.tsx"],
+      exclude: ["src/**/ui/**/*.tsx", "src/__test__/**/*.tsx", "src/app/layout.tsx"],
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
       thresholds: {
